@@ -37,14 +37,15 @@ class GrailsPilot {
         //make sure that we are running from the correct place
         def commandOutput = new StringBuffer()
         def commandError = new StringBuffer()
-        Process createGrailsWindtunnelApp = "${grailsExec}.bat create-app windtunnel-app".execute(['JAVA_HOME','C:\\Program Files\\Java\\jdk1.7.0_25'], new File(plan.testDirectory))
+        Process createGrailsWindtunnelApp = "${grailsExec} create-app windtunnel-app".execute(["JAVA_HOME=${System.getProperty('java.home')}"], new File(plan.testDirectory))
         createGrailsWindtunnelApp.waitFor();
         createGrailsWindtunnelApp.consumeProcessOutput(commandOutput, commandError)
         createGrailsWindtunnelApp.consumeProcessErrorStream(commandError)
-        println 'sout: ' + commandOutput // => test text
-        println 'commandError: ' + commandError
+        println 'create-app output' + commandOutput
+        println 'create-apperror output: ' + commandError
 
-
+        int index = commandOutput.indexOf('Created Grails Application at')
+        Paths.get(commandOutput.substring(index + 30))
 
     }
 }

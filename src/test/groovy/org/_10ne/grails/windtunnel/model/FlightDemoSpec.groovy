@@ -5,6 +5,8 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 
+import java.nio.file.Path
+
 /**
  * @author Noam Y. Tenne.
  */
@@ -38,6 +40,7 @@ class FlightDemoSpec extends Specification {
     }
 
 
+    @IgnoreRest
     def 'Run app'() {
         setup:
 //        def compilerConfiguration = new CompilerConfiguration()
@@ -49,12 +52,15 @@ class FlightDemoSpec extends Specification {
 
         GrailsPilot pilot = new GrailsPilot(flight)
 
-        expect:
-        pilot.createApp()
+        when:
+        Path appPath = pilot.createApp()
+
+        then:
+        appPath.toString() == "${flight.testDirectory}/windtunnel-app\n"
 
     }
 
-    @IgnoreRest
+
     def 'Run app win'() {
         setup:
 //        def compilerConfiguration = new CompilerConfiguration()
