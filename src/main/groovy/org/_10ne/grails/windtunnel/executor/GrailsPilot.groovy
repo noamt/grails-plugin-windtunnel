@@ -35,17 +35,41 @@ class GrailsPilot {
     Path createApp() {
         //grails non interactive mode
         //make sure that we are running from the correct place
-        def commandOutput = new StringBuffer()
-        def commandError = new StringBuffer()
-        Process createGrailsWindtunnelApp = "${grailsExec} create-app windtunnel-app".execute(["JAVA_HOME=${System.getProperty('java.home')}"], new File(plan.testDirectory))
-        createGrailsWindtunnelApp.waitFor();
-        createGrailsWindtunnelApp.consumeProcessOutput(commandOutput, commandError)
-        createGrailsWindtunnelApp.consumeProcessErrorStream(commandError)
-        println 'create-app output' + commandOutput
-        println 'create-apperror output: ' + commandError
+//        def commandOutput = new StringBuffer()
+//        def commandError = new StringBuffer()
+//        Process createGrailsWindtunnelApp = "${grailsExec} create-app windtunnel-app".execute(["JAVA_HOME=${System.getProperty('java.home')}"], new File(plan.testDirectory))
+//        createGrailsWindtunnelApp.waitFor();
+//        createGrailsWindtunnelApp.consumeProcessOutput(commandOutput, commandError)
+//        createGrailsWindtunnelApp.consumeProcessErrorStream(commandError)
+//        println 'create-app output' + commandOutput
+//        println 'create-apperror output: ' + commandError
+//
+//        int index = commandOutput.indexOf('Created Grails Application at')
+//        Paths.get(commandOutput.substring(index + 30))
 
+        def commandOutput = runCommand("${grailsExec} create-app windtunnel-app", new File(plan.testDirectory))
         int index = commandOutput.indexOf('Created Grails Application at')
         Paths.get(commandOutput.substring(index + 30))
 
     }
+
+
+    static def runCommand(String command, File dir=null) {
+        //grails non interactive mode
+        //make sure that we are running from the correct place
+        def commandOutput = new StringBuffer()
+        def commandError = new StringBuffer()
+        Process createGrailsWindtunnelApp = command.execute(["JAVA_HOME=${System.getProperty('java.home')}"], dir)
+        createGrailsWindtunnelApp.waitFor();
+        createGrailsWindtunnelApp.consumeProcessOutput(commandOutput, commandError)
+        createGrailsWindtunnelApp.consumeProcessErrorStream(commandError)
+        println 'comman output' + commandOutput
+        println 'command error output: ' + commandError
+
+        commandOutput
+//        int index = commandOutput.indexOf('Created Grails Application at')
+//        Paths.get(commandOutput.substring(index + 30))
+
+    }
+
 }
