@@ -19,6 +19,41 @@ dependencies {
     testCompile('org.spockframework:spock-core:0.7-groovy-2.0')
 }
 
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+jar.dependsOn sourceJar
+
+task assembleManifestAttributes {
+    doLast {
+        jar {
+            manifest {
+                attributes('Main-Class': 'org._10ne.grails.windtunnel.executor.Main',
+                        'Class-Path': configurations.runtime.collect { it.name }.join(' '))
+            }
+        }
+    }
+}
+
+jar.dependsOn assembleManifestAttributes
+
+task zip(type: Zip) {
+    def innerDir = "${project.name}-$version"
+    into(innerDir) {
+        into('lib') {
+            from configurations.runtime
+            from jar.archivePath
+        }
+        from(sourceSets.main.resources) {
+            include('*.sh')
+            fileMode = 0755
+        }
+    }
+}
+
+zip.dependsOn jar
+
 idea {
     project {
         jdkName = '1.7'
