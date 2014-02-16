@@ -40,23 +40,23 @@ class DefaultGrailsPilot implements GrailsPilot {
         def validator = { String output ->
             output.contains('Created Grails Application at')
         }
-        runCommand("${grailsExec} ${CREATE_APP_COMMAND} ${APP_NAME}", validator, new File(plan.testDirectory))
+        runCommand([grailsExec, CREATE_APP_COMMAND, APP_NAME, '--non-interactive'], validator,
+                new File(plan.testDirectory))
         Paths.get(plan.testDirectory, APP_NAME)
     }
 
     void refreshDependencies() {
-        def validator = { String output ->
-            output.contains('Dependencies refreshed')
-        }
-        runRefreshDependenciesCommand("${grailsExec} ${REFRESH_DEPENDENCIES_COMMAND}", new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
+        runRefreshDependenciesCommand([grailsExec, REFRESH_DEPENDENCIES_COMMAND, '--non-interactive'],
+                new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
     }
 
     void runApp() {
-        runStartAppCommand("${grailsExec} ${RUN_APP_COMMAND}", new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
+        runStartAppCommand([grailsExec, RUN_APP_COMMAND, '--non-interactive'],
+                new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
     }
 
 
-    static def runCommand(String command, Closure validator, File dir = null) {
+    static def runCommand(List<String> command, Closure validator, File dir = null) {
         def commandOutput = new StringBuilder()
         def commandError = new StringBuilder()
         Process windtunnelAppProcess = command.execute([getJavaHomeProperty()], dir)
@@ -70,7 +70,7 @@ class DefaultGrailsPilot implements GrailsPilot {
         commandOutput
     }
 
-    static def runStartAppCommand(String command, File dir = null) {
+    static def runStartAppCommand(List<String> command, File dir = null) {
         Process createGrailsWindtunnelApp = command.execute([getJavaHomeProperty()], dir)
         println("Running command: ${command}")
         def out = createGrailsWindtunnelApp.getInputStream()
@@ -97,7 +97,7 @@ class DefaultGrailsPilot implements GrailsPilot {
         createGrailsWindtunnelApp.destroy()
     }
 
-    static def runRefreshDependenciesCommand(String command, File dir = null) {
+    static def runRefreshDependenciesCommand(List<String> command, File dir = null) {
         Process createGrailsWindtunnelApp = command.execute([getJavaHomeProperty()], dir)
         println("Running command: ${command}")
         def out = createGrailsWindtunnelApp.getInputStream()
