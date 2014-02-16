@@ -8,4 +8,6 @@ class FlightPlan {
     String grailsVersion
     String plugin
     String testDirectory
+
+    String alternativeGrailsDir
 }

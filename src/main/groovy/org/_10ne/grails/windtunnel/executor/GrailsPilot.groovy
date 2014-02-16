@@ -18,7 +18,10 @@ class GrailsPilot {
         this.plan = plan
         grailsInstallation = Paths.get(System.getProperty('user.home'), '.gvm', 'grails', plan.grailsVersion)
         if (Files.notExists(grailsInstallation)) {
-            throw new Exception("Unable to find Grails installation at: ${grailsInstallation}")
+            grailsInstallation = Paths.get(plan.alternativeGrailsDir)
+            if (Files.notExists(Paths.get(plan.alternativeGrailsDir))){
+                throw new Exception("Unable to find Grails installation at: ${grailsInstallation}")
+            }
         }
         if (!Files.isReadable(grailsInstallation)) {
             throw new Exception("Unable to access Grails installation at: ${grailsInstallation}")
@@ -34,7 +37,8 @@ class GrailsPilot {
         //make sure that we are running from the correct place
         def commandOutput = new StringBuffer()
         def commandError = new StringBuffer()
-        Process createGrailsWindtunnelApp = "${plan.testDirectory} grails create-app windtunnel-app".execute()
+        Process createGrailsWindtunnelApp = "${grailsExec}.bat create-app windtunnel-app".execute(['JAVA_HOME','C:\\Program Files\\Java\\jdk1.7.0_25'], new File(plan.testDirectory))
+        createGrailsWindtunnelApp.waitFor();
         createGrailsWindtunnelApp.consumeProcessOutput(commandOutput, commandError)
         createGrailsWindtunnelApp.consumeProcessErrorStream(commandError)
         println 'sout: ' + commandOutput // => test text

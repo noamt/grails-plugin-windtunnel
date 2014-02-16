@@ -20,13 +20,13 @@ class FlightDemoSpec extends Specification {
 
         def shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
 
-        def flightPlan = '''
-usingGrails('2.1.1')
-testPlugin('/x/y/z')
-at('/x/y/z/momo')
-'''
+        def flightScript = '''
+                usingGrails('2.1.1')
+                testPlugin('/x/y/z')
+                at('/x/y/z/momo')
+            '''
         when:
-        shell.evaluate(flightPlan)
+        shell.evaluate(flightScript)
 
         then:
         flight.grailsVersion == '2.1.1'
@@ -38,7 +38,6 @@ at('/x/y/z/momo')
     }
 
 
-    @IgnoreRest
     def 'Run app'() {
         setup:
 //        def compilerConfiguration = new CompilerConfiguration()
@@ -55,5 +54,22 @@ at('/x/y/z/momo')
 
     }
 
+    @IgnoreRest
+    def 'Run app win'() {
+        setup:
+//        def compilerConfiguration = new CompilerConfiguration()
+//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
+
+        def flight = new FlightPlan()
+        flight.grailsVersion = '2.1.4'
+        flight.testDirectory = 'c:\\test-grails'
+        flight.alternativeGrailsDir = 'C:\\grails-2.1.4'
+
+        GrailsPilot pilot = new GrailsPilot(flight)
+
+        expect:
+        pilot.createApp()
+
+    }
 
 }
