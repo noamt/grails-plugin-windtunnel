@@ -10,6 +10,7 @@ abstract class FlightPlanScript extends Script {
     }
 
     def testPlugin(String repositoryUrl, String groupId, String artifactId, String version) {
+        this.binding.flight.pluginData = new PluginSource()
         this.binding.flight.pluginData.repositoryUrl = repositoryUrl
         this.binding.flight.pluginData.groupId = groupId
         this.binding.flight.pluginData.artifactId = artifactId

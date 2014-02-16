@@ -40,16 +40,15 @@ class DefaultGrailsPilot implements GrailsPilot {
         def validator = { String output ->
             output.contains('Created Grails Application at')
         }
-        def commandOutput = runCommand("${grailsExec} ${CREATE_APP_COMMAND} ${APP_NAME}", validator, new File(plan.testDirectory))
-        int index = commandOutput.indexOf('Created Grails Application at')
-        Paths.get(commandOutput.substring(index + 30))
+        runCommand("${grailsExec} ${CREATE_APP_COMMAND} ${APP_NAME}", validator, new File(plan.testDirectory))
+        Paths.get(plan.testDirectory, APP_NAME)
     }
 
     void refreshDependencies() {
         def validator = { String output ->
             output.contains('Dependencies refreshed')
         }
-        runCommand("${grailsExec} ${REFRESH_DEPENDENCIES_COMMAND}", validator, new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
+        runRefreshDependenciesCommand("${grailsExec} ${REFRESH_DEPENDENCIES_COMMAND}", new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
     }
 
     void runApp() {
@@ -85,6 +84,33 @@ class DefaultGrailsPilot implements GrailsPilot {
                 if (read) {
                     println(read)
                     if (read.contains('Server running')) {
+                        stop = true
+                    }
+                    if (read.contains('Error')) {
+                        throw new Exception(read)
+                    }
+                }
+            }
+        } finally {
+            out.close()
+        }
+        createGrailsWindtunnelApp.destroy()
+    }
+
+    static def runRefreshDependenciesCommand(String command, File dir = null) {
+        Process createGrailsWindtunnelApp = command.execute([getJavaHomeProperty()], dir)
+        println("Running command: ${command}")
+        def out = createGrailsWindtunnelApp.getInputStream()
+
+        boolean stop = false
+        try {
+            while (!stop) {
+                byte[] bytes = new byte[out.available()]
+                out.read(bytes)
+                String read = new String(bytes)
+                if (read) {
+                    println(read)
+                    if (read.contains('Dependencies refreshed')) {
                         stop = true
                     }
                     if (read.contains('Error')) {

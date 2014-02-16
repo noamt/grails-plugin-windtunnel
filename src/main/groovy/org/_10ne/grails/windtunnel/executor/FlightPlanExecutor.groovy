@@ -17,38 +17,12 @@ class FlightPlanExecutor {
         Injector injector = Guice.createInjector(new FlightModule());
         GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
         pilot.init(plan)
-        Path app = pilot.createApp()
-//        def testDir = Files.createTempDirectory('tests')
-//        def tempEnvFile = Files.createTempFile('temp', 'env').toFile()
+        Path appPath = pilot.createApp()
+        GrailsPluginDependencyInjector grailsPluginDependencyInjector = new GrailsPluginDependencyInjector()
+        def buildConfigPath = appPath.resolve('grails-app').resolve('conf').resolve('BuildConfig.groovy')
+        grailsPluginDependencyInjector.addPluginDependency(buildConfigPath, plan.pluginData)
+        pilot.refreshDependencies()
 
-//        def executor = new DefaultExecutor()
-
-//        def commandLine = new CommandLine("bash -c source ${tempEnvFile.absolutePath} ; source ${System.getProperty('user.home')}/.gvm/bin/gvm-init.sh ; gvm use grails ${plan.grailsVersion}")
-
-//        System.getenv().each {key, value ->
-//            tempEnvFile << "$key=\"$value\"\n"
-//        }
-//        Process process = "bash -c 'source ${System.getProperty('user.home')}/.gvm/bin/gvm-init.sh' ; gvm use grails ${plan.grailsVersion}".execute([], testDir.toFile())
-//        Process process = ['bash', '-c', "source ${tempEnvFile.absolutePath} ; source ${System.getProperty('user.home')}/.gvm/bin/gvm-init.sh ; gvm use grails ${plan.grailsVersion}"].execute([], testDir.toFile())
-//        def standardOutput = new StringWriter()
-//        def errorOutput = new StringWriter()
-
-//        process.consumeProcessOutput(standardOutput, errorOutput)
-
-//        def errorOut = errorOutput.toString()
-//        if (!errorOut.isEmpty()) {
-//            throw new Exception("Error selecting Grails version ${plan.grailsVersion} via GVM: ${errorOut}")
-//        }
-
-//        def standardOut = standardOutput.toString()
-//        if (standardOut.contains('Using')) {
-//            println 'Great success!'
-//        } else if (standardOut.contains('not installed')) {
-//            process.outputStream.write('y'.bytes)
-//            process.outputStream.write('\r'.bytes)
-//            process.outputStream.flush()
-//        }
-
-        true
+        pilot.runApp()
     }
 }
