@@ -36,27 +36,41 @@ class GrailsPilot {
     Path createApp() {
         //grails non interactive mode
         //make sure that we are running from the correct place
-        def commandOutput = runCommand("${grailsExec} create-app ${APP_NAME}", new File(plan.testDirectory))
+
+        def validator = {String output ->
+            output.contains('Created Grails Application at')
+        }
+
+        def commandOutput = runCommand("${grailsExec} create-app ${APP_NAME}", validator,  new File(plan.testDirectory))
         int index = commandOutput.indexOf('Created Grails Application at')
         Paths.get(commandOutput.substring(index + 30))
     }
 
     void refreshDependencies() {
-        runCommand("${grailsExec} refresh-dependencies", new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
+        def validator = {String output ->
+            output.contains('Dependencies refreshed')
+        }
+        runCommand("${grailsExec} refresh-dependencies", validator, new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
     }
 
     void runApp() {
-        runCommand("${grailsExec} run-app", new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
+        def validator = {String output ->
+            output.contains('Server running')
+        }
+        runCommand("${grailsExec} run-app", validator, new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
     }
 
 
-    static def runCommand(String command, File dir=null) {
+    static def runCommand(String command, Closure validator, File dir=null) {
         //grails non interactive mode
         //make sure that we are running from the correct place
         def commandOutput = new StringBuilder()
         def commandError = new StringBuilder()
         Process createGrailsWindtunnelApp = command.execute(["JAVA_HOME=${System.getProperty('java.home')}"], dir)
         println("Running command: ${command}")
+        if(!validator.call(commandOutput)){
+            throw new Exception("Error running: ${command}, command output: ${commandOutput}")
+        }
         createGrailsWindtunnelApp.waitFor();
         createGrailsWindtunnelApp.consumeProcessOutput(commandOutput, commandError)
         createGrailsWindtunnelApp.consumeProcessErrorStream(commandError)
