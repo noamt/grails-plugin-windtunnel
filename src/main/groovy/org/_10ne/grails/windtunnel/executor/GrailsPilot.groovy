@@ -53,8 +53,8 @@ class GrailsPilot {
     static def runCommand(String command, File dir=null) {
         //grails non interactive mode
         //make sure that we are running from the correct place
-        def commandOutput = new StringBuffer()
-        def commandError = new StringBuffer()
+        def commandOutput = new StringBuilder()
+        def commandError = new StringBuilder()
         Process createGrailsWindtunnelApp = command.execute(["JAVA_HOME=${System.getProperty('java.home')}"], dir)
         println("Running command: ${command}")
         createGrailsWindtunnelApp.waitFor();
