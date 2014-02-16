@@ -1,6 +1,10 @@
 package org._10ne.grails.windtunnel.model
 
+import com.google.inject.Guice
+import com.google.inject.Injector
+import org._10ne.grails.windtunnel.executor.FlightModule
 import org._10ne.grails.windtunnel.executor.GrailsPilot
+import org._10ne.grails.windtunnel.executor.RealGrailsPilot
 import org.codehaus.groovy.control.CompilerConfiguration
 import spock.lang.IgnoreRest
 import spock.lang.Specification
@@ -41,15 +45,20 @@ class FlightDemoSpec extends Specification {
     }
 
 
+    @IgnoreRest
     def 'Run app'() {
         setup:
+//        def compilerConfiguration = new CompilerConfiguration()
+//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
+        Injector injector = Guice.createInjector(new FlightModule());
+
         def flight = new FlightPlan()
         flight.grailsVersion = '2.1.4'
-        //flight.testDirectory = "${System.getProperty('user.home')}/test-grails"
-        flight.testDirectory = Files.createTempDirectory('test-grails')
+        flight.testDirectory = '/home/liatn/test-grails'
 
-        GrailsPilot pilot = new GrailsPilot(flight)
+        GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
 
+        pilot.init(flight)
         when:
         Path appPath = pilot.createApp()
 
@@ -62,21 +71,23 @@ class FlightDemoSpec extends Specification {
 
     }
 
-//    def 'Run app win'() {
-//        setup:
-////        def compilerConfiguration = new CompilerConfiguration()
-////        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
-//
-//        def flight = new FlightPlan()
-//        flight.grailsVersion = '2.1.4'
-//        flight.testDirectory = 'c:\\test-grails'
-//        flight.alternativeGrailsDir = 'C:\\grails-2.1.4'
-//
-//        GrailsPilot pilot = new GrailsPilot(flight)
-//
-//        expect:
-//        pilot.createApp()
-//
-//    }
+    def 'Run app win'() {
+        setup:
+//        def compilerConfiguration = new CompilerConfiguration()
+//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
+        Injector injector = Guice.createInjector(new FlightModule());
+
+        def flight = new FlightPlan()
+        flight.grailsVersion = '2.1.4'
+        flight.testDirectory = 'c:\\test-grails'
+        flight.alternativeGrailsDir = 'C:\\grails-2.1.4'
+
+        GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
+
+        pilot.init(flight)
+        expect:
+        pilot.createApp()
+
+    }
 
 }
