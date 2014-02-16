@@ -4,9 +4,8 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import org._10ne.grails.windtunnel.executor.FlightModule
 import org._10ne.grails.windtunnel.executor.GrailsPilot
-import org._10ne.grails.windtunnel.executor.RealGrailsPilot
 import org.codehaus.groovy.control.CompilerConfiguration
-import spock.lang.IgnoreRest
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.nio.file.Files
@@ -40,21 +39,15 @@ class FlightDemoSpec extends Specification {
         flight.plugin == '/x/y/z'
         flight.testDirectory == '/x/y/z/momo'
 
-//        and:
-//        new FlightPlanExecutor(plan: flight).execute()
     }
 
-
-    @IgnoreRest
     def 'Run app'() {
         setup:
-//        def compilerConfiguration = new CompilerConfiguration()
-//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
         Injector injector = Guice.createInjector(new FlightModule());
 
         def flight = new FlightPlan()
         flight.grailsVersion = '2.1.4'
-        flight.testDirectory = '/home/liatn/test-grails'
+        flight.testDirectory = Files.createTempDirectory('testdir').toString()
 
         GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
 
@@ -71,10 +64,9 @@ class FlightDemoSpec extends Specification {
 
     }
 
+    @Ignore
     def 'Run app win'() {
         setup:
-//        def compilerConfiguration = new CompilerConfiguration()
-//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
         Injector injector = Guice.createInjector(new FlightModule());
 
         def flight = new FlightPlan()

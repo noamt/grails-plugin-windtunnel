@@ -8,6 +8,6 @@ import com.google.inject.AbstractModule
 class FlightModule extends AbstractModule{
     @Override
     protected void configure() {
-        bind(GrailsPilot.class).to(RealGrailsPilot.class);
+        bind(GrailsPilot.class).to(DefaultGrailsPilot.class);
     }
 }
