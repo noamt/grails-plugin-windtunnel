@@ -1,0 +1,44 @@
+== Grails Plugin Windtunnel
+
+*Currently in early alpha stages.*
+
+A framework for blackbox testing of Grails plugins.
+
+=== Abstract
+
+When developing Grails plugins, we can write unit & integration test cases that check the internals of the plugin, but we have no easy way of testing the plugin once it's been packaged. +
+
+.To test a packaged plugin, we must:
+* Install the plugin to our local build-tool cache or deploy it to a repository.
+* Create a new test application.
+* Configure the application to depend on the plugin.
+* Run different test cases.
+
+Multiply this scenario accross different versions of OS, Grails and plugins, and you've earned yourself a huge pain in the ass.
+
+=== Current state
+
+.The windtunnel is currently able to:
+* Resolve a Grails version from the GVM home directory.
+* Create a test application.
+* Configure the application to depend on a plugin.
+* Start the application.
+
+=== Usage
+
+Snapshots of the distribution are available at https://oss.jfrog.org/oss-snapshot-local/org/10ne/grails-plugin-windtunnel/0.0.x-SNAPSHOT[oss.jfrog.org]. +
+
+==== Author a flight plan
+A flight plan is a simple Groovy script that's evaluated with the Windtunnel's DSL.
+[source,groovy]
+----
+usingGrails('2.1.4')
+testPlugin('http://repo.com', 'org.grails.plugins', 'jquery-ui', '1.10.3')
+at('/tmp/')
+----
+
+==== Execute the flight plan
+[source,bash]
+----
+noam@mandromeda:~/gpw-0.0.x-SNAPSHOT$ ./gpw.sh /home/noam/FlightPlan.groovy
+----
