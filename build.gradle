@@ -1,7 +1,17 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.3'
+    }
+}
+
 apply plugin: 'idea'
-apply plugin: 'maven-publish'
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'artifactory-publish'
 
 group = 'org.10ne'
 version = '0.0.x-SNAPSHOT'
@@ -53,6 +63,35 @@ task zip(type: Zip) {
 }
 
 zip.dependsOn jar
+
+artifactory {
+    contextUrl = 'https://oss.jfrog.org'
+    resolve {
+        repoKey = 'libs-release'
+    }
+    publish {
+        defaults {
+            publishArtifacts = true
+        }
+    }
+}
+
+
+publishing {
+    publications {
+        gpw(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier 'source'
+            }
+            artifact zip
+        }
+    }
+}
+
+artifactoryPublish {
+    publications(publishing.publications.gpw)
+}
 
 idea {
     project {
