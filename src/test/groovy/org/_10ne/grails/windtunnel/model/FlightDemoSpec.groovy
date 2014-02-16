@@ -58,8 +58,11 @@ class FlightDemoSpec extends Specification {
         then:
         appPath.toString() == "${flight.testDirectory}/windtunnel-app\n"
 
-    }
+        expect:
+        pilot.refreshDependencies()
+        pilot.runApp()
 
+    }
 
     def 'Run app win'() {
         setup:
