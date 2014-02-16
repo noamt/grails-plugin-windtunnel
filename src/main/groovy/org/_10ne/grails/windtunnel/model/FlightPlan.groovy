@@ -6,8 +6,11 @@ package org._10ne.grails.windtunnel.model
 class FlightPlan {
 
     String grailsVersion
-    String plugin
     String testDirectory
-
     String alternativeGrailsDir
+
+    PluginSource pluginData
+
+
+
 }

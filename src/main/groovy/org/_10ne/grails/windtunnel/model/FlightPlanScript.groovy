@@ -9,9 +9,12 @@ abstract class FlightPlanScript extends Script {
         this.binding.flight.grailsVersion = grailsVersion
     }
 
-    def testPlugin(String pluginAbsolutePath) {
-        this.binding.flight.plugin = pluginAbsolutePath
-    }
+    def testPlugin(String repositoryUrl, String groupId, String artifactId, String version) {
+        this.binding.flight.pluginData.repositoryUrl = repositoryUrl
+        this.binding.flight.pluginData.groupId = groupId
+        this.binding.flight.pluginData.artifactId = artifactId
+        this.binding.flight.pluginData.version = version
+     }
 
     def at(String testDirectoryAbsolutePath) {
         this.binding.flight.testDirectory = testDirectoryAbsolutePath
