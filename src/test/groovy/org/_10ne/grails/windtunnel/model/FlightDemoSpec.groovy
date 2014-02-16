@@ -5,6 +5,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 
+import java.nio.file.Files
 import java.nio.file.Path
 
 /**
@@ -40,15 +41,12 @@ class FlightDemoSpec extends Specification {
     }
 
 
-    @IgnoreRest
     def 'Run app'() {
         setup:
-//        def compilerConfiguration = new CompilerConfiguration()
-//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
-
         def flight = new FlightPlan()
         flight.grailsVersion = '2.1.4'
-        flight.testDirectory = '/home/liatn/test-grails'
+        //flight.testDirectory = "${System.getProperty('user.home')}/test-grails"
+        flight.testDirectory = Files.createTempDirectory('test-grails')
 
         GrailsPilot pilot = new GrailsPilot(flight)
 
@@ -64,21 +62,21 @@ class FlightDemoSpec extends Specification {
 
     }
 
-    def 'Run app win'() {
-        setup:
-//        def compilerConfiguration = new CompilerConfiguration()
-//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
-
-        def flight = new FlightPlan()
-        flight.grailsVersion = '2.1.4'
-        flight.testDirectory = 'c:\\test-grails'
-        flight.alternativeGrailsDir = 'C:\\grails-2.1.4'
-
-        GrailsPilot pilot = new GrailsPilot(flight)
-
-        expect:
-        pilot.createApp()
-
-    }
+//    def 'Run app win'() {
+//        setup:
+////        def compilerConfiguration = new CompilerConfiguration()
+////        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
+//
+//        def flight = new FlightPlan()
+//        flight.grailsVersion = '2.1.4'
+//        flight.testDirectory = 'c:\\test-grails'
+//        flight.alternativeGrailsDir = 'C:\\grails-2.1.4'
+//
+//        GrailsPilot pilot = new GrailsPilot(flight)
+//
+//        expect:
+//        pilot.createApp()
+//
+//    }
 
 }
