@@ -20,7 +20,7 @@ class GrailsPilot {
         if (Files.notExists(grailsInstallation)) {
             throw new Exception("Unable to find Grails installation at: ${grailsInstallation}")
         }
-        if (Files.isReadable(grailsInstallation)) {
+        if (!Files.isReadable(grailsInstallation)) {
             throw new Exception("Unable to access Grails installation at: ${grailsInstallation}")
         }
         grailsExec = grailsInstallation.resolve('bin').resolve('grails')
@@ -30,6 +30,17 @@ class GrailsPilot {
     }
 
     Path createApp() {
+        //grails non interactive mode
+        //make sure that we are running from the correct place
+        def commandOutput = new StringBuffer()
+        def commandError = new StringBuffer()
+        Process createGrailsWindtunnelApp = "${plan.testDirectory} grails create-app windtunnel-app".execute()
+        createGrailsWindtunnelApp.consumeProcessOutput(commandOutput, commandError)
+        createGrailsWindtunnelApp.consumeProcessErrorStream(commandError)
+        println 'sout: ' + commandOutput // => test text
+        println 'commandError: ' + commandError
+
+
 
     }
 }

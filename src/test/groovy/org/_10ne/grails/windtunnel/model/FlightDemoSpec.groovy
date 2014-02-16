@@ -1,6 +1,8 @@
 package org._10ne.grails.windtunnel.model
 
+import org._10ne.grails.windtunnel.executor.GrailsPilot
 import org.codehaus.groovy.control.CompilerConfiguration
+import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 /**
@@ -33,6 +35,24 @@ at('/x/y/z/momo')
 
 //        and:
 //        new FlightPlanExecutor(plan: flight).execute()
+    }
+
+
+    @IgnoreRest
+    def 'Run app'() {
+        setup:
+//        def compilerConfiguration = new CompilerConfiguration()
+//        compilerConfiguration.scriptBaseClass = FlightPlanScript.name
+
+        def flight = new FlightPlan()
+        flight.grailsVersion = '2.1.4'
+        flight.testDirectory = '/home/liatn/test-grails'
+
+        GrailsPilot pilot = new GrailsPilot(flight)
+
+        expect:
+        pilot.createApp()
+
     }
 
 
