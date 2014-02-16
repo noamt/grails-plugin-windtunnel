@@ -1,5 +1,7 @@
 package org._10ne.grails.windtunnel.executor
 
+import com.google.inject.Guice
+import com.google.inject.Injector
 import org._10ne.grails.windtunnel.model.FlightPlan
 
 import java.nio.file.Path
@@ -12,7 +14,9 @@ class FlightPlanExecutor {
     FlightPlan plan
 
     def execute() {
-        GrailsPilot pilot = new GrailsPilot(plan)
+        Injector injector = Guice.createInjector(new FlightModule());
+        GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
+        pilot.init(plan)
         Path app = pilot.createApp()
 //        def testDir = Files.createTempDirectory('tests')
 //        def tempEnvFile = Files.createTempFile('temp', 'env').toFile()
