@@ -22,17 +22,14 @@ class DefaultGrailsPilot implements GrailsPilot {
         this.plan = plan
         grailsInstallation = Paths.get(System.getProperty('user.home'), '.gvm', 'grails', plan.grailsVersion)
         if (Files.notExists(grailsInstallation)) {
-            grailsInstallation = Paths.get(plan.alternativeGrailsDir)
-            if (Files.notExists(Paths.get(plan.alternativeGrailsDir))) {
-                throw new Exception("Unable to find Grails installation at: ${grailsInstallation}")
-            }
+            throw new Exception("Unable to find Grails installation at: $grailsInstallation")
         }
         if (!Files.isReadable(grailsInstallation)) {
-            throw new Exception("Unable to access Grails installation at: ${grailsInstallation}")
+            throw new Exception("Unable to access Grails installation at: $grailsInstallation")
         }
         grailsExec = grailsInstallation.resolve('bin').resolve('grails')
         if (!Files.isExecutable(grailsExec)) {
-            throw new Exception("Unable to find Grails executable at: ${grailsExec}")
+            throw new Exception("Unable to find Grails executable at: $grailsExec")
         }
     }
 

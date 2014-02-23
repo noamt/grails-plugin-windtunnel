@@ -7,10 +7,6 @@ class FlightPlan {
 
     String grailsVersion
     String testDirectory
-    String alternativeGrailsDir
 
-    PluginSource pluginData
-
-
-
+    PluginSource pluginSource
 }

@@ -20,7 +20,7 @@ class FlightPlanExecutor {
         Path appPath = pilot.createApp()
         GrailsPluginDependencyInjector grailsPluginDependencyInjector = new GrailsPluginDependencyInjector()
         def buildConfigPath = appPath.resolve('grails-app').resolve('conf').resolve('BuildConfig.groovy')
-        grailsPluginDependencyInjector.addPluginDependency(buildConfigPath, plan.pluginData)
+        grailsPluginDependencyInjector.addPluginDependency(buildConfigPath, plan.pluginSource)
         pilot.refreshDependencies()
 
         pilot.runApp()

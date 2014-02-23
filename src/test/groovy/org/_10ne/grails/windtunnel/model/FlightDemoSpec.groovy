@@ -5,7 +5,6 @@ import com.google.inject.Injector
 import org._10ne.grails.windtunnel.executor.FlightModule
 import org._10ne.grails.windtunnel.executor.GrailsPilot
 import org.codehaus.groovy.control.CompilerConfiguration
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.nio.file.Files
@@ -63,23 +62,4 @@ class FlightDemoSpec extends Specification {
         pilot.runApp()
 
     }
-
-    @Ignore
-    def 'Run app win'() {
-        setup:
-        Injector injector = Guice.createInjector(new FlightModule());
-
-        def flight = new FlightPlan()
-        flight.grailsVersion = '2.1.4'
-        flight.testDirectory = 'c:\\test-grails'
-        flight.alternativeGrailsDir = 'C:\\grails-2.1.4'
-
-        GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
-
-        pilot.init(flight)
-        expect:
-        pilot.createApp()
-
-    }
-
 }
