@@ -13,7 +13,7 @@ class DefaultGrailsPilot implements GrailsPilot {
     private FlightPlan plan
     private Path grailsInstallation
     private Path grailsExec
-    private static APP_NAME = 'windtunnel-app'
+    private appName
     public static CREATE_APP_COMMAND = 'create-app'
     public static REFRESH_DEPENDENCIES_COMMAND = ' refresh-dependencies'
     public static RUN_APP_COMMAND = 'run-app'
@@ -31,25 +31,27 @@ class DefaultGrailsPilot implements GrailsPilot {
         if (!Files.isExecutable(grailsExec)) {
             throw new Exception("Unable to find Grails executable at: $grailsExec")
         }
+
+        appName = "test-app-${System.currentTimeMillis()}"
     }
 
     Path createApp() {
         def validator = { String output ->
             output.contains('Created Grails Application at')
         }
-        runCommand([grailsExec, CREATE_APP_COMMAND, APP_NAME, '--non-interactive'], validator,
+        runCommand([grailsExec, CREATE_APP_COMMAND, appName, '--non-interactive'], validator,
                 new File(plan.testDirectory))
-        Paths.get(plan.testDirectory, APP_NAME)
+        Paths.get(plan.testDirectory, appName)
     }
 
     void refreshDependencies() {
         runRefreshDependenciesCommand([grailsExec, REFRESH_DEPENDENCIES_COMMAND, '--non-interactive'],
-                new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
+                new File("${plan.testDirectory}${File.separator}${appName}"))
     }
 
     void runApp() {
         runStartAppCommand([grailsExec, RUN_APP_COMMAND, '--non-interactive'],
-                new File("${plan.testDirectory}${File.separator}${APP_NAME}"))
+                new File("${plan.testDirectory}${File.separator}${appName}"))
     }
 
 
