@@ -42,13 +42,13 @@ class FlightDemoSpec extends Specification {
 
     def 'Run app'() {
         setup:
-        Injector injector = Guice.createInjector(new FlightModule());
+        Injector injector = Guice.createInjector(new FlightModule())
 
         def flight = new FlightPlan()
         flight.grailsVersion = '2.1.4'
         flight.testDirectory = Files.createTempDirectory('testdir').toString()
 
-        GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
+        GrailsPilot pilot = injector.getInstance(GrailsPilot)
 
         pilot.init(flight)
         when:

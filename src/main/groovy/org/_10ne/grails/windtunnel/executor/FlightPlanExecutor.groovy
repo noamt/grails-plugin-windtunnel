@@ -14,8 +14,8 @@ class FlightPlanExecutor {
     FlightPlan plan
 
     def execute() {
-        Injector injector = Guice.createInjector(new FlightModule());
-        GrailsPilot pilot = injector.getInstance(GrailsPilot.class);
+        Injector injector = Guice.createInjector(new FlightModule())
+        GrailsPilot pilot = injector.getInstance(GrailsPilot)
         pilot.init(plan)
         Path appPath = pilot.createApp()
         GrailsPluginDependencyInjector grailsPluginDependencyInjector = new GrailsPluginDependencyInjector()
