@@ -79,7 +79,7 @@ class GrailsPluginDependencyInjectorSpec extends Specification {
     }
 
     private Path buildConfigTemplate() {
-        def buildConfigTemplate = Paths.get(this.class.getResource('/org/_10ne/grails/windtunnel/executor/BuildConfig.groovy').toURI())
+        def buildConfigTemplate = Paths.get(this.class.getResource('/org/_10ne/grails/windtunnel/executor/BuildConfig.gscript').toURI())
         def tempBuildConfig = Files.createTempFile('BuildConfig', 'groovy')
         Files.delete(tempBuildConfig)
         Files.copy(buildConfigTemplate, tempBuildConfig)
