@@ -10,7 +10,7 @@ abstract class FlightPlanScript extends Script {
     }
 
     def testPlugin(Map<Object, Object> pluginSource) {
-        this.binding.flight.pluginData = new PluginSource(pluginSource)
+        this.binding.flight.pluginSource = new PluginSource(pluginSource)
     }
 
     def at(String testDirectoryAbsolutePath) {
