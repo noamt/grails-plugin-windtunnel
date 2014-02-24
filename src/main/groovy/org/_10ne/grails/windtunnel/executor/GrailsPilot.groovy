@@ -1,6 +1,6 @@
 package org._10ne.grails.windtunnel.executor
 
-import org._10ne.grails.windtunnel.model.FlightPlan
+import com.google.inject.Inject
 
 import java.nio.file.Path
 
@@ -9,7 +9,9 @@ import java.nio.file.Path
  */
 interface GrailsPilot {
 
-    void init(FlightPlan plan)
+    @Inject
+    void init()
+
     Path createApp()
     void refreshDependencies()
     void runApp()

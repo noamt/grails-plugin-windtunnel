@@ -1,5 +1,6 @@
 package org._10ne.grails.windtunnel.executor
 
+import com.google.inject.Inject
 import org._10ne.grails.windtunnel.model.FlightPlan
 
 import java.nio.file.Files
@@ -9,23 +10,18 @@ import java.nio.file.Paths
 /**
  * @author Ophir Hordan
  */
-class DefaultGrailsPilot implements GrailsPilot {
-    private FlightPlan plan
+abstract class BaseGrailsPilot implements GrailsPilot {
+
+    @Inject
+    FlightPlan plan
+
     private Path grailsExec
     private appName
     private static CREATE_APP_COMMAND = 'create-app'
     private static REFRESH_DEPENDENCIES_COMMAND = ' refresh-dependencies'
     private static RUN_APP_COMMAND = 'run-app'
 
-    void init(FlightPlan plan) {
-        this.plan = plan
-        Path grailsInstallation = Paths.get(System.getProperty('user.home'), '.gvm', 'grails', plan.grailsVersion)
-        if (Files.notExists(grailsInstallation)) {
-            throw new Exception("Unable to find Grails installation at: $grailsInstallation")
-        }
-        if (!Files.isReadable(grailsInstallation)) {
-            throw new Exception("Unable to access Grails installation at: $grailsInstallation")
-        }
+    protected void init(Path grailsInstallation) {
         grailsExec = grailsInstallation.resolve('bin').resolve('grails')
         if (!Files.isExecutable(grailsExec)) {
             throw new Exception("Unable to find Grails executable at: $grailsExec")

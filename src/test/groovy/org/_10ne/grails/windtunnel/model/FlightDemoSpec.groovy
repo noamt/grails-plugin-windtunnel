@@ -50,7 +50,7 @@ class FlightDemoSpec extends Specification {
 
         GrailsPilot pilot = injector.getInstance(GrailsPilot)
 
-        pilot.init(flight)
+        pilot.init()
         when:
         Path appPath = pilot.createApp()
 

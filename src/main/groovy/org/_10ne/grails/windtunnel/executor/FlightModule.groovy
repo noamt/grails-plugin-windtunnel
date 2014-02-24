@@ -1,13 +1,23 @@
 package org._10ne.grails.windtunnel.executor
 
 import com.google.inject.AbstractModule
+import org._10ne.grails.windtunnel.model.FlightPlan
 
 /**
  * Created by ophirh on 2/16/14.
  */
 class FlightModule extends AbstractModule {
+
+    private FlightPlan plan
+
+    FlightModule(FlightPlan plan) {
+        this.plan = plan
+    }
+
     @Override
     protected void configure() {
-        bind(GrailsPilot).to(DefaultGrailsPilot)
+        bind(FlightPlan).toInstance(plan)
+        bind(GrailsPilot).to(GvmGrailsPilot)
+        bind(FlightPlanExecutor).to(DefaultFlightPlanExecutor)
     }
 }
