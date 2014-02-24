@@ -11,16 +11,15 @@ import java.nio.file.Paths
  */
 class DefaultGrailsPilot implements GrailsPilot {
     private FlightPlan plan
-    private Path grailsInstallation
     private Path grailsExec
     private appName
-    public static CREATE_APP_COMMAND = 'create-app'
-    public static REFRESH_DEPENDENCIES_COMMAND = ' refresh-dependencies'
-    public static RUN_APP_COMMAND = 'run-app'
+    private static CREATE_APP_COMMAND = 'create-app'
+    private static REFRESH_DEPENDENCIES_COMMAND = ' refresh-dependencies'
+    private static RUN_APP_COMMAND = 'run-app'
 
     void init(FlightPlan plan) {
         this.plan = plan
-        grailsInstallation = Paths.get(System.getProperty('user.home'), '.gvm', 'grails', plan.grailsVersion)
+        Path grailsInstallation = Paths.get(System.getProperty('user.home'), '.gvm', 'grails', plan.grailsVersion)
         if (Files.notExists(grailsInstallation)) {
             throw new Exception("Unable to find Grails installation at: $grailsInstallation")
         }
@@ -54,11 +53,10 @@ class DefaultGrailsPilot implements GrailsPilot {
                 new File("${plan.testDirectory}${File.separator}${appName}"))
     }
 
-
-    static def runCommand(List<String> command, Closure validator, File dir = null) {
+    private void runCommand(List<String> command, Closure validator, File dir = null) {
         def commandOutput = new StringBuilder()
         def commandError = new StringBuilder()
-        Process windtunnelAppProcess = command.execute([getJavaHomeProperty()], dir)
+        Process windtunnelAppProcess = command.execute([javaHomeEnvironmentVariable()], dir)
         println("Running command: ${command}")
 
         windtunnelAppProcess.waitForProcessOutput(commandOutput, commandError)
@@ -69,9 +67,9 @@ class DefaultGrailsPilot implements GrailsPilot {
         commandOutput
     }
 
-    static def runStartAppCommand(List<String> command, File dir = null) {
-        Process createGrailsWindtunnelApp = command.execute([getJavaHomeProperty()], dir)
-        println("Running command: ${command}")
+    private void runStartAppCommand(List<String> command, File dir = null) {
+        Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir)
+        println("Running command: $command")
         def out = createGrailsWindtunnelApp.getInputStream()
 
         boolean stop = false
@@ -96,9 +94,9 @@ class DefaultGrailsPilot implements GrailsPilot {
         createGrailsWindtunnelApp.destroy()
     }
 
-    static def runRefreshDependenciesCommand(List<String> command, File dir = null) {
-        Process createGrailsWindtunnelApp = command.execute([getJavaHomeProperty()], dir)
-        println("Running command: ${command}")
+    private void runRefreshDependenciesCommand(List<String> command, File dir = null) {
+        Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir)
+        println("Running command: $command")
         def out = createGrailsWindtunnelApp.getInputStream()
 
         boolean stop = false
@@ -123,20 +121,24 @@ class DefaultGrailsPilot implements GrailsPilot {
         createGrailsWindtunnelApp.destroy()
     }
 
-    public static void printOutput(commandOutput, commandError) {
+    private void printOutput(commandOutput, commandError) {
         println "Comman output: ${commandOutput}"
         if (commandError) {
             println "Command error output: ${commandError}"
         }
     }
 
-    private static String getJavaHomeProperty() {
-        if (System.getenv().get('JAVA_HOME')) {
-            return "JAVA_HOME=${System.getenv().get('JAVA_HOME')}"
+    private String javaHomeEnvironmentVariable() {
+        if (javaHomeFromSystemEnv()) {
+            return "JAVA_HOME=${javaHomeFromSystemEnv()}"
         } else {
             def javaHomeProperty = System.getProperty('java.home')
             javaHomeProperty = javaHomeProperty.substring(0, javaHomeProperty.indexOf('jre') - 1)
             return "JAVA_HOME=${javaHomeProperty}"
         }
+    }
+
+    private String javaHomeFromSystemEnv() {
+        System.getenv().get('JAVA_HOME')
     }
 }
