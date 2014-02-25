@@ -3,6 +3,8 @@ package org._10ne.grails.windtunnel.executor
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
@@ -23,10 +25,18 @@ class Main {
             System.exit(1)
         }
 
-        String scriptPath = providedArguments.first()
+        String givenScriptPath = providedArguments.first()
+        Path scriptPath = Paths.get(givenScriptPath)
+        if (Files.notExists(scriptPath)) {
+            throw new Exception("Unable to find flight plan at: $scriptPath")
+        }
+        if (!Files.isReadable(scriptPath)) {
+            throw new Exception("Unable to read flight plan from: $scriptPath")
+        }
 
         def planEvaluator = new FlightPlanScripts()
-        def flightPlan = planEvaluator.evaluate(Paths.get(scriptPath).toFile())
+
+        def flightPlan = planEvaluator.evaluate(scriptPath)
 
         Injector injector = Guice.createInjector(new FlightModule(flightPlan))
         injector.getInstance(FlightPlanExecutor).execute()

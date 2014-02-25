@@ -4,12 +4,14 @@ import org._10ne.grails.windtunnel.model.FlightPlan
 import org._10ne.grails.windtunnel.model.FlightPlanScript
 import org.codehaus.groovy.control.CompilerConfiguration
 
+import java.nio.file.Path
+
 /**
  * @author Noam Y. Tenne.
  */
 class FlightPlanScripts {
 
-    FlightPlan evaluate(File scriptFile) {
+    FlightPlan evaluate(Path scriptFile) {
         def compilerConfiguration = new CompilerConfiguration()
         compilerConfiguration.scriptBaseClass = FlightPlanScript.name
 
@@ -18,7 +20,7 @@ class FlightPlanScripts {
 
         def shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
 
-        shell.evaluate(scriptFile)
+        shell.evaluate(scriptFile.toFile())
 
         flight
     }
