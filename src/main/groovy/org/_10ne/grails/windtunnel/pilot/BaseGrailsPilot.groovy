@@ -1,4 +1,4 @@
-package org._10ne.grails.windtunnel.executor
+package org._10ne.grails.windtunnel.pilot
 
 import com.google.inject.Inject
 import org._10ne.grails.windtunnel.model.FlightPlan

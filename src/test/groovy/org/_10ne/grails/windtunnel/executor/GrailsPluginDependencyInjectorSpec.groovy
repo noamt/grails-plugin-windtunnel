@@ -1,6 +1,7 @@
 package org._10ne.grails.windtunnel.executor
 
 import org._10ne.grails.windtunnel.model.PluginSource
+import org._10ne.grails.windtunnel.pilot.GrailsPluginDependencyInjector
 import spock.lang.Shared
 import spock.lang.Specification
 

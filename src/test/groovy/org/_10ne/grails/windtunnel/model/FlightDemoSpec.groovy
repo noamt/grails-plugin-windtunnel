@@ -3,7 +3,7 @@ package org._10ne.grails.windtunnel.model
 import com.google.inject.Guice
 import com.google.inject.Injector
 import org._10ne.grails.windtunnel.executor.FlightModule
-import org._10ne.grails.windtunnel.executor.GrailsPilot
+import org._10ne.grails.windtunnel.pilot.GrailsPilot
 import org.codehaus.groovy.control.CompilerConfiguration
 import spock.lang.Specification
 

@@ -2,6 +2,8 @@ package org._10ne.grails.windtunnel.executor
 
 import com.google.inject.Inject
 import org._10ne.grails.windtunnel.model.FlightPlan
+import org._10ne.grails.windtunnel.pilot.GrailsPilot
+import org._10ne.grails.windtunnel.pilot.GrailsPluginDependencyInjector
 
 import java.nio.file.Path
 
