@@ -20,12 +20,14 @@ targetCompatibility = 1.7
 
 repositories {
     jcenter()
+    maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' }
 }
 
 dependencies {
     compile('org.codehaus.groovy:groovy-all:2.2.1')
     compile('commons-cli:commons-cli:1.2')
     compile('com.google.inject:guice:4.0-beta')
+    compile('org.10ne:sgvm:0.0.x-SNAPSHOT')
     testCompile('org.spockframework:spock-core:0.7-groovy-2.0')
 }
 
@@ -106,6 +108,9 @@ idea {
                 vcsConfig.mapping[0].'@vcs' = 'Git'
             }
         }
+    }
+    module {
+        downloadSources = true
     }
 }
 
