@@ -14,7 +14,7 @@ When developing Grails plugins, we can write unit & integration test cases that 
 * Configure the application to depend on the plugin.
 * Run different test cases.
 
-Multiply this scenario accross different versions of OS, Grails and plugins, and you've earned yourself a huge pain in the ass.
+Multiply this scenario across different versions of OS, Grails and plugins, and you've earned yourself a huge pain in the ass.
 
 === Current state
 
