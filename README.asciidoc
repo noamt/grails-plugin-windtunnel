@@ -1,7 +1,5 @@
 == Grails Plugin Windtunnel
 
-*Currently in early alpha stages.*
-
 A framework for blackbox testing of Grails plugins.
 
 === Abstract
@@ -26,7 +24,7 @@ Multiply this scenario across different versions of OS, Grails and plugins, and 
 
 === Usage
 
-Snapshots of the distribution are available at https://oss.jfrog.org/oss-snapshot-local/org/10ne/grails-plugin-windtunnel/0.0.x-SNAPSHOT[oss.jfrog.org]. +
+The Grails Plugin Windtunnel distribution is now available via https://bintray.com/noamt/java-libraries/grails-plugin-windtunnel/[Bintray]. +
 
 ==== Author a flight plan
 A flight plan is a simple Groovy script that's evaluated with the Windtunnel's DSL.
@@ -40,5 +38,5 @@ at('/tmp/')
 ==== Execute the flight plan
 [source,bash]
 ----
-noam@mandromeda:~/gpw-0.0.x-SNAPSHOT$ ./gpw.sh /home/noam/FlightPlan.groovy
+noam@mandromeda:~/gpw$ ./gpw.sh /home/noam/FlightPlan.groovy
 ----
