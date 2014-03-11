@@ -17,7 +17,7 @@ Multiply this scenario across different versions of OS, Grails and plugins, and 
 === Current state
 
 .The windtunnel is currently able to:
-* Resolve a Grails version from the GVM home directory.
+* Resolve a Grails version using https://github.com/noamt/sgvm[SGVM].
 * Create a test application.
 * Configure the application to depend on a plugin.
 * Start the application.
