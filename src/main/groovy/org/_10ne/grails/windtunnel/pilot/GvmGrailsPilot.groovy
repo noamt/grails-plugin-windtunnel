@@ -13,7 +13,7 @@ class GvmGrailsPilot extends BaseGrailsPilot {
     @Inject
     @Override
     void init() {
-        Path grailsInstallation = Gvm.use().grails(version: plan.grailsVersion)
+        Path grailsInstallation = Gvm.use.grails(version: plan.grailsVersion, install: true)
         init(grailsInstallation)
     }
 }
