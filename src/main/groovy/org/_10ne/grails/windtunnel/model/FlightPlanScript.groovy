@@ -16,4 +16,8 @@ abstract class FlightPlanScript extends Script {
     def at(String testDirectoryAbsolutePath) {
         this.binding.flight.testDirectory = testDirectoryAbsolutePath
     }
+
+    def withConfig(Closure grailsConfig) {
+        this.binding.flight.grailsConfig = grailsConfig
+    }
 }

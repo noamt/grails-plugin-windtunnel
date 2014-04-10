@@ -9,4 +9,6 @@ class FlightPlan {
     String testDirectory
 
     PluginSource pluginSource
+
+    Closure grailsConfig
 }
