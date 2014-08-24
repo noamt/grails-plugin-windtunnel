@@ -23,9 +23,9 @@ repositories {
 }
 
 dependencies {
-    compile('org.codehaus.groovy:groovy-all:2.2.1')
+    compile('org.codehaus.groovy:groovy-all:2.3.6')
     compile('commons-cli:commons-cli:1.2')
-    compile('com.google.inject:guice:4.0-beta')
+    compile('com.google.inject:guice:4.0-beta4')
     compile('org.10ne:sgvm:0.0.1.5')
     testCompile('org.spockframework:spock-core:0.7-groovy-2.0')
 }
@@ -111,8 +111,4 @@ idea {
     module {
         downloadSources = true
     }
-}
-
-task wrapper(type: Wrapper, description: 'Gradle Wrapper task') {
-    gradleVersion = '1.11'
 }
