@@ -1,4 +1,6 @@
-package org._10ne.grails.windtunnel.model
+package org._10ne.grails.windtunnel.executor
+
+import org._10ne.grails.windtunnel.model.PluginSource
 
 /**
  * @author Noam Y. Tenne.

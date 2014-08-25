@@ -1,7 +1,6 @@
 package org._10ne.grails.windtunnel.executor
 
 import org._10ne.grails.windtunnel.model.FlightPlan
-import org._10ne.grails.windtunnel.model.FlightPlanScript
 import org.codehaus.groovy.control.CompilerConfiguration
 
 import java.nio.file.Path
