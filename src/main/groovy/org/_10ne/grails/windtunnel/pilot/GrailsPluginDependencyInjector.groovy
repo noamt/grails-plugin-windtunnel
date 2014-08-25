@@ -15,7 +15,14 @@ class GrailsPluginDependencyInjector {
 
         if (pluginSource.repositoryUrl) {
             def repositoriesClosureLineIndex = buildConfigLines.findIndexOf { it.contains('repositories {') }
-            buildConfigLines.add((repositoriesClosureLineIndex + 1), "mavenRepo '${pluginSource.repositoryUrl}'")
+            def scheme = new URI(pluginSource.repositoryUrl).scheme
+            String repo
+            if (['http', 'https'].contains(scheme)) {
+                repo = 'mavenRepo'
+            } else {
+                repo = 'mavenLocal'
+            }
+            buildConfigLines.add((repositoriesClosureLineIndex + 1), "$repo '${pluginSource.repositoryUrl}'")
         }
 
         def pluginsClosureLineIndex = buildConfigLines.findIndexOf { it.contains('plugins {') }
