@@ -9,6 +9,7 @@ import spock.lang.Specification
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * @author Noam Y. Tenne.
@@ -26,27 +27,27 @@ class FlightDemoSpec extends Specification {
         def shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
 
         def flightScript = '''
-                usingGrails('2.1.1')
-                testPlugin('/x/y/z')
-                at('/x/y/z/momo')
+                usingGrails '2.1.1'
+                testPlugin artifactId: 'artifact', version: '1.0'
+                at '/x/y/z/momo'
             '''
         when:
         shell.evaluate(flightScript)
 
         then:
         flight.grailsVersion == '2.1.1'
-        flight.plugin == '/x/y/z'
+        flight.pluginSource.artifactId == 'artifact'
+        flight.pluginSource.version == '1.0'
         flight.testDirectory == '/x/y/z/momo'
-
     }
 
     def 'Run app'() {
         setup:
-        Injector injector = Guice.createInjector(new FlightModule())
-
         def flight = new FlightPlan()
         flight.grailsVersion = '2.1.4'
         flight.testDirectory = Files.createTempDirectory('testdir').toString()
+        def flightModule = new FlightModule(flight)
+        Injector injector = Guice.createInjector(flightModule)
 
         GrailsPilot pilot = injector.getInstance(GrailsPilot)
 
@@ -55,7 +56,7 @@ class FlightDemoSpec extends Specification {
         Path appPath = pilot.createApp()
 
         then:
-        appPath.toString() == "${flight.testDirectory}/windtunnel-app\n"
+        appPath.parent == Paths.get(flight.testDirectory)
 
         expect:
         pilot.refreshDependencies()
