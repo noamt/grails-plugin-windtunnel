@@ -25,8 +25,10 @@ class DefaultFlightPlanExecutor implements FlightPlanExecutor {
     def execute() {
         Path appPath = pilot.createApp()
 
-        def configPath = appPath.resolve('grails-app').resolve('conf').resolve('Config.groovy')
-        grailsConfigurationInjector.addConfiguration(configPath, plan.grailsConfig)
+        if (plan.grailsConfig) {
+            def configPath = appPath.resolve('grails-app').resolve('conf').resolve('Config.groovy')
+            grailsConfigurationInjector.addConfiguration(configPath, plan.grailsConfig)
+        }
 
         def buildConfigPath = appPath.resolve('grails-app').resolve('conf').resolve('BuildConfig.groovy')
         grailsPluginDependencyInjector.addPluginDependency(buildConfigPath, plan.pluginSource)
