@@ -31,7 +31,7 @@ A flight plan is a simple Groovy script that's evaluated with the Windtunnel's D
 [source,groovy]
 ----
 usingGrails('2.1.4')
-testPlugin(artifactId: 'jquery-ui', version: '1.10.3' /*, repositoryUrl: http://jcenter.bintray.com, groupId: org.other.group*/)
+testPlugin(artifactId: 'jquery-ui', version: '1.10.3' /*, repositoryUrl: 'http://jcenter.bintray.com', groupId: 'org.other.group'*/)
 at('/tmp/')
 ----
 
