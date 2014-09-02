@@ -1,6 +1,7 @@
 package org._10ne.grails.windtunnel.pilot
 
 import com.google.inject.Inject
+import groovy.util.logging.Slf4j
 import org._10ne.grails.windtunnel.model.FlightPlan
 
 import java.nio.file.Files
@@ -10,6 +11,7 @@ import java.nio.file.Paths
 /**
  * @author Ophir Hordan
  */
+@Slf4j
 abstract class BaseGrailsPilot implements GrailsPilot {
 
     @Inject
@@ -53,7 +55,7 @@ abstract class BaseGrailsPilot implements GrailsPilot {
         def commandOutput = new StringBuilder()
         def commandError = new StringBuilder()
         Process windtunnelAppProcess = command.execute([javaHomeEnvironmentVariable()], dir)
-        println("Running command: ${command}")
+        log.info "Running command: $command"
 
         windtunnelAppProcess.waitForProcessOutput(commandOutput, commandError)
         if (!validator.call(commandOutput.toString())) {
@@ -65,7 +67,7 @@ abstract class BaseGrailsPilot implements GrailsPilot {
 
     private void runStartAppCommand(List<String> command, File dir = null) {
         Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir)
-        println("Running command: $command")
+        log.info "Running command: $command"
         def out = createGrailsWindtunnelApp.getInputStream()
 
         boolean stop = false
@@ -75,7 +77,7 @@ abstract class BaseGrailsPilot implements GrailsPilot {
                 out.read(bytes)
                 String read = new String(bytes)
                 if (read) {
-                    println(read)
+                    log.info read
                     if (read.contains('Server running')) {
                         stop = true
                     }
@@ -92,7 +94,7 @@ abstract class BaseGrailsPilot implements GrailsPilot {
 
     private void runRefreshDependenciesCommand(List<String> command, File dir = null) {
         Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir)
-        println("Running command: $command")
+        log.info "Running command: $command"
         def out = createGrailsWindtunnelApp.getInputStream()
 
         boolean stop = false
@@ -102,7 +104,7 @@ abstract class BaseGrailsPilot implements GrailsPilot {
                 out.read(bytes)
                 String read = new String(bytes)
                 if (read) {
-                    println(read)
+                    log.info read
                     if (read.contains('Dependencies refreshed')) {
                         stop = true
                     }
@@ -118,20 +120,19 @@ abstract class BaseGrailsPilot implements GrailsPilot {
     }
 
     private void printOutput(commandOutput, commandError) {
-        println "Comman output: ${commandOutput}"
+        log.info "Comman output: $commandOutput"
         if (commandError) {
-            println "Command error output: ${commandError}"
+            log.info "Command error output: $commandError"
         }
     }
 
     private String javaHomeEnvironmentVariable() {
         if (javaHomeFromSystemEnv()) {
             return "JAVA_HOME=${javaHomeFromSystemEnv()}"
-        } else {
-            def javaHomeProperty = System.getProperty('java.home')
-            javaHomeProperty = javaHomeProperty.substring(0, javaHomeProperty.indexOf('jre') - 1)
-            return "JAVA_HOME=${javaHomeProperty}"
         }
+        def javaHomeProperty = System.properties['java.home']
+        javaHomeProperty = javaHomeProperty.substring(0, javaHomeProperty.indexOf('jre') - 1)
+        "JAVA_HOME=${javaHomeProperty}"
     }
 
     private String javaHomeFromSystemEnv() {
