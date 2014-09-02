@@ -1,7 +1,13 @@
 package org._10ne.grails.windtunnel.executor
 
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.joran.JoranConfigurator
+import ch.qos.logback.core.joran.spi.JoranException
 import com.google.inject.Guice
 import com.google.inject.Injector
+import groovy.util.logging.Slf4j
+import org.codehaus.groovy.control.io.NullWriter
+import org.slf4j.LoggerFactory
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -10,12 +16,26 @@ import java.nio.file.Paths
 /**
  * @author Noam Y. Tenne.
  */
+@Slf4j
 class Main {
 
     public static void main(String[] args) {
-        println 'Grails Plugin Windtunnel - A blackbox testing framework for Grails plugins\n'
+        def logbackConfig = Paths.get("${System.getProperty('launcher.dir', '')}/etc/logback.xml")
+        if (Files.exists(logbackConfig)) {
+            LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+            JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(context);
+            context.reset();
+            try {
+                configurator.doConfigure(logbackConfig.toFile());
+            } catch (JoranException e) {
+                LoggerFactory.getLogger(Main).error("Could not configure logging.", e);
+            }
+        }
 
-        CliBuilder cliBuilder = new CliBuilder(usage: 'gpw <script>')
+        log.info 'Grails Plugin Windtunnel - A blackbox testing framework for Grails plugins\n'
+
+        CliBuilder cliBuilder = new CliBuilder(usage: 'gpw <script>', writer: new LoggerWriter())
         cliBuilder.setFooter('https://github.com/noamt/grails-plugin-windtunnel')
 
         OptionAccessor optionAccessor = cliBuilder.parse(args)
@@ -28,10 +48,12 @@ class Main {
         String givenScriptPath = providedArguments.first()
         Path scriptPath = Paths.get(givenScriptPath)
         if (Files.notExists(scriptPath)) {
-            throw new Exception("Unable to find flight plan at: $scriptPath")
+            log.error "Unable to find flight plan at: $scriptPath"
+            System.exit(1)
         }
         if (!Files.isReadable(scriptPath)) {
-            throw new Exception("Unable to read flight plan from: $scriptPath")
+            log.error "Unable to read flight plan from: $scriptPath"
+            System.exit(1)
         }
 
         def planEvaluator = new FlightPlanScripts()
@@ -40,5 +62,17 @@ class Main {
 
         Injector injector = Guice.createInjector(new FlightModule(flightPlan))
         injector.getInstance(FlightPlanExecutor).execute()
+    }
+
+    private static class LoggerWriter extends PrintWriter {
+
+        LoggerWriter() {
+            super(new NullWriter())
+        }
+
+        @Override
+        void println(String x) {
+            log.info(x)
+        }
     }
 }

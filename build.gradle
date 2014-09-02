@@ -62,7 +62,13 @@ task zip(type: Zip) {
         into('bin') {
             from('bin') {
                 include('*.sh')
-                fileMode = 0755
+                fileMode = 0744
+            }
+        }
+        into('etc') {
+            from('etc') {
+                include('logback.xml')
+                fileMode = 0444
             }
         }
     }
