@@ -27,6 +27,8 @@ dependencies {
     compile('commons-cli:commons-cli:1.2')
     compile('com.google.inject:guice:4.0-beta4')
     compile('org.10ne:sgvm:0.0.1.5')
+    compile('ch.qos.logback:logback-classic:1.1.2')
+    compile('ch.qos.logback:logback-core:1.1.2')
     testCompile('cglib:cglib-nodep:3.1')
     testCompile('org.spockframework:spock-core:0.7-groovy-2.0')
 }
