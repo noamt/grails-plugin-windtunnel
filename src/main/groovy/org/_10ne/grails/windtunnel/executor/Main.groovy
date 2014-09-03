@@ -22,7 +22,7 @@ import java.nio.file.Paths
 class Main {
 
     public static void main(String[] args) {
-        def logbackConfig = Paths.get("${System.getProperty('launcher.dir', '')}/etc/logback.xml")
+        def logbackConfig = Paths.get(System.getProperty('launcher.dir', ''), 'etc', 'logback.xml')
         if (Files.exists(logbackConfig)) {
             LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
             JoranConfigurator configurator = new JoranConfigurator();
