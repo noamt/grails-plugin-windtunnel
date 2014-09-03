@@ -5,8 +5,10 @@ import ch.qos.logback.classic.joran.JoranConfigurator
 import ch.qos.logback.core.joran.spi.JoranException
 import com.google.inject.Guice
 import com.google.inject.Injector
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.codehaus.groovy.control.io.NullWriter
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.nio.file.Files
@@ -33,9 +35,10 @@ class Main {
             }
         }
 
-        log.info 'Grails Plugin Windtunnel - A blackbox testing framework for Grails plugins\n'
+        log.info 'Grails Plugin Windtunnel - A blackbox testing framework for Grails plugins'
+        log.info ''
 
-        CliBuilder cliBuilder = new CliBuilder(usage: 'gpw <script>', writer: new LoggerWriter())
+        CliBuilder cliBuilder = new CliBuilder(usage: 'gpw <script>', writer: new LoggerWriter(log))
         cliBuilder.setFooter('https://github.com/noamt/grails-plugin-windtunnel')
 
         OptionAccessor optionAccessor = cliBuilder.parse(args)
@@ -64,10 +67,14 @@ class Main {
         injector.getInstance(FlightPlanExecutor).execute()
     }
 
+    @CompileStatic
     private static class LoggerWriter extends PrintWriter {
 
-        LoggerWriter() {
+        private Logger log
+
+        LoggerWriter(Logger log) {
             super(new NullWriter())
+            this.log = log
         }
 
         @Override
