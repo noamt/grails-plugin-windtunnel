@@ -39,14 +39,14 @@ class FlightDemoSpec extends Specification {
         flight.grailsVersion == '2.1.1'
         flight.pluginSource.artifactId == 'artifact'
         flight.pluginSource.version == '1.0'
-        flight.testDirectory == '/x/y/z/momo'
+        flight.testDirectory == Paths.get('/x/y/z/momo')
     }
 
     def 'Run app'() {
         setup:
         def flight = new FlightPlan()
         flight.grailsVersion = '2.1.4'
-        flight.testDirectory = Files.createTempDirectory('testdir').toString()
+        flight.testDirectory = Files.createTempDirectory('testdir').toAbsolutePath()
         def flightModule = new FlightModule(flight)
         Injector injector = Guice.createInjector(flightModule)
 
@@ -57,7 +57,7 @@ class FlightDemoSpec extends Specification {
         Path appPath = pilot.createApp()
 
         then:
-        appPath.parent == Paths.get(flight.testDirectory)
+        appPath.parent == flight.testDirectory
 
         expect:
         pilot.refreshDependencies()

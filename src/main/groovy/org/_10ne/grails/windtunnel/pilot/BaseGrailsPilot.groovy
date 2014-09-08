@@ -36,25 +36,22 @@ abstract class BaseGrailsPilot implements GrailsPilot {
         def validator = { String output ->
             output.contains('Created Grails Application at')
         }
-        runCommand([grailsExec, CREATE_APP_COMMAND, appName, '--non-interactive'], validator,
-                new File(plan.testDirectory))
-        Paths.get(plan.testDirectory, appName)
+        runCommand([grailsExec, CREATE_APP_COMMAND, appName, '--non-interactive'], validator, plan.testDirectory)
+        plan.testDirectory.resolve(appName)
     }
 
     void refreshDependencies() {
         runRefreshDependenciesCommand([grailsExec, REFRESH_DEPENDENCIES_COMMAND, '--non-interactive'],
-                new File("${plan.testDirectory}${File.separator}${appName}"))
+                plan.testDirectory.resolve(appName))
     }
 
     void runApp() {
-        runStartAppCommand([grailsExec, RUN_APP_COMMAND, '--non-interactive'],
-                new File("${plan.testDirectory}${File.separator}${appName}"))
-    }
+        runStartAppCommand([grailsExec, RUN_APP_COMMAND, '--non-interactive'], plan.testDirectory.resolve(appName)) }
 
-    private void runCommand(List<String> command, Closure validator, File dir = null) {
+    private void runCommand(List<String> command, Closure validator, Path dir) {
         def commandOutput = new StringBuilder()
         def commandError = new StringBuilder()
-        Process windtunnelAppProcess = command.execute([javaHomeEnvironmentVariable()], dir)
+        Process windtunnelAppProcess = command.execute([javaHomeEnvironmentVariable()], dir.toFile())
         log.info "Running command: $command"
 
         windtunnelAppProcess.waitForProcessOutput(commandOutput, commandError)
@@ -65,8 +62,8 @@ abstract class BaseGrailsPilot implements GrailsPilot {
         commandOutput
     }
 
-    private void runStartAppCommand(List<String> command, File dir = null) {
-        Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir)
+    private void runStartAppCommand(List<String> command, Path dir) {
+        Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir.toFile())
         log.info "Running command: $command"
         def out = createGrailsWindtunnelApp.getInputStream()
 
@@ -92,8 +89,8 @@ abstract class BaseGrailsPilot implements GrailsPilot {
         createGrailsWindtunnelApp.destroy()
     }
 
-    private void runRefreshDependenciesCommand(List<String> command, File dir = null) {
-        Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir)
+    private void runRefreshDependenciesCommand(List<String> command, Path dir) {
+        Process createGrailsWindtunnelApp = command.execute([javaHomeEnvironmentVariable()], dir.toFile())
         log.info "Running command: $command"
         def out = createGrailsWindtunnelApp.getInputStream()
 

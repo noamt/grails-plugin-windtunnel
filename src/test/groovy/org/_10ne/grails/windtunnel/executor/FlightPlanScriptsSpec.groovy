@@ -3,6 +3,7 @@ package org._10ne.grails.windtunnel.executor
 import spock.lang.Specification
 
 import java.nio.file.Files
+import java.nio.file.Paths
 
 /**
  * @author Noam Y. Tenne
@@ -26,7 +27,7 @@ class FlightPlanScriptsSpec extends Specification {
 
         then:
         flightPlan.grailsVersion == '2.1.1'
-        flightPlan.testDirectory == '/x/y/z/momo'
+        flightPlan.testDirectory == Paths.get('/x/y/z/momo')
         !flightPlan.grailsConfig
         flightPlan.pluginSource.artifactId == 'artifact'
         flightPlan.pluginSource.version == '1.0'
